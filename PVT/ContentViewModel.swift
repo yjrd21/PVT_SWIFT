@@ -1,5 +1,9 @@
 import SwiftUI
 import Combine
+import UserNotifications
+
+
+
 
 class ContentViewModel: ObservableObject {
     @Published var instructionText = "Press Start to begin the test"
@@ -15,6 +19,7 @@ class ContentViewModel: ObservableObject {
     @Published var timeUserClick: Date?
     @Published var timeBackendClick: Date?
     @Published var showAlert = false
+    @Published var isDNDActive = false
     
     
     private var frameRateMonitor = FrameRateViewModel()
@@ -33,6 +38,22 @@ class ContentViewModel: ObservableObject {
             }
         } else {
             print("Invalid URL for Focus settings")
+        }
+    }
+    
+    func checkNotificationSettings(completion: @escaping (Bool) -> Void) {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                // Check if notifications are allowed
+                let notificationsEnabled = settings.alertSetting == .enabled
+                self.isDNDActive = !notificationsEnabled // Assume DND is active if notifications are not enabled
+                
+                print("Notifications Enabled: \(notificationsEnabled)")
+                print("Assumed DND Active: \(self.isDNDActive)")
+                
+                completion(notificationsEnabled)
+            }
         }
     }
 

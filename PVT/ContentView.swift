@@ -29,8 +29,12 @@ struct ContentView: View {
                     if viewModel.stimulusVisible {
                         viewModel.recordReaction()
                     } else {
-                        viewModel.showAlert = true
-                        print("Button pressed, showAlert set to true")
+                        print("Checking notification settings...")
+                        viewModel.checkNotificationSettings { isEnabled in
+                            print("Notification settings checked. Notifications Enabled: \(isEnabled)")
+                            viewModel.showAlert = true
+                            print("Button pressed, showAlert set to true")
+                        }
                     }
                 }) {
                     Text(viewModel.stimulusVisible ? "Record Response" : "Start Test")
@@ -39,6 +43,8 @@ struct ContentView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+
+
                 .padding()
                 
                 if viewModel.reactionTime > 0 {
@@ -73,21 +79,27 @@ struct ContentView: View {
                 print("ContentView disappeared")
             }
             .alert(isPresented: $viewModel.showAlert) {
-                print("Alert is being presented")
+                print("Showing alert. DND Active: \(viewModel.isDNDActive)")
+                
                 return Alert(
                     title: Text("Focus Mode Recommended"),
                     message: Text("We recommend enabling a Focus Mode that blocks notifications while using this app. You can create a Focus Mode in the iOS Settings under Focus."),
                     primaryButton: .default(Text("Open Settings")) {
+                        print("Open Settings tapped.")
                         viewModel.openFocusSettings()
-                        print("openFocusSettings() launched")
                         viewModel.showAlert = false
                     },
-                    secondaryButton: .cancel(Text("Continue")) {
+                    secondaryButton: viewModel.isDNDActive ? .cancel(Text("Continue")) {
+                        print("Continue tapped. DND is active, starting test.")
                         viewModel.showAlert = false
                         viewModel.startTest()
+                    } : .default(Text("Continue").foregroundColor(.gray)) {
+                        print("Disabled Continue tapped. No action taken.")
+                        // Disabled button, does nothing
                     }
                 )
             }
+
         }
     }
 }
