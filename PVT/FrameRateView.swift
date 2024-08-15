@@ -11,6 +11,7 @@ struct FrameRateView: View {
                 .padding()
             
             Button(action: {
+                print("Return to Home tapped")
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Text("Return to Home")
@@ -22,9 +23,11 @@ struct FrameRateView: View {
             .padding()
         }
         .onAppear {
-                 frameRateMonitor.startMonitoring()
+            frameRateMonitor.startMonitoring()
+            print("FrameRateView appeared, starting monitoring")
              }
-             .onDisappear {
+        .onDisappear {
+                 print("FrameRateView disappeared, stopping monitoring")
                  frameRateMonitor.stopMonitoring()
              }
     }
