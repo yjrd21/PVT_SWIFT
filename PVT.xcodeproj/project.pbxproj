@@ -27,6 +27,7 @@
 		00DF69212C6CB85B008BF02B /* FrameRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRateView.swift; sourceTree = "<group>"; };
 		00DF69232C6CBB63008BF02B /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		00DF69252C6CBBF1008BF02B /* FrameRateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRateViewModel.swift; sourceTree = "<group>"; };
+		00FB26F22C843D53004C1D1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +60,7 @@
 		0051B8152C0A216300012933 /* PVT */ = {
 			isa = PBXGroup;
 			children = (
+				00FB26F22C843D53004C1D1D /* Info.plist */,
 				0051B8162C0A216300012933 /* PVTApp.swift */,
 				00DF69232C6CBB63008BF02B /* ContentViewModel.swift */,
 				0051B8182C0A216300012933 /* ContentView.swift */,
@@ -291,6 +293,8 @@
 				DEVELOPMENT_TEAM = 6Y7GHZ288A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PVT/Info.plist;
+				INFOPLIST_KEY_NSFocusStatusUsageDescription = "This app needs access to your Focus Status to ensure that you are not disturbed during the test.\n";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -320,6 +324,8 @@
 				DEVELOPMENT_TEAM = 6Y7GHZ288A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PVT/Info.plist;
+				INFOPLIST_KEY_NSFocusStatusUsageDescription = "This app needs access to your Focus Status to ensure that you are not disturbed during the test.\n";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

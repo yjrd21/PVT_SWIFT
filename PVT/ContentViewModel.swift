@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 import UserNotifications
+import AVFoundation
+
 
 
 
@@ -19,7 +21,6 @@ class ContentViewModel: ObservableObject {
     @Published var timeUserClick: Date?
     @Published var timeBackendClick: Date?
     @Published var showAlert = false
-    @Published var isDNDActive = false
     
     
     private var frameRateMonitor = FrameRateViewModel()
@@ -28,34 +29,38 @@ class ContentViewModel: ObservableObject {
         reactionTime = 0
         nextStimulus()
     }
-
-    func openFocusSettings() {
-        print("openFocusSettings() called")
-        if let url = URL(string: "App-Prefs:root=FOCUS") {
-            print("Attempting to open settings URL")
-            UIApplication.shared.open(url) { success in
-                print("UIApplication.shared.open(url) executed, success: \(success)")
-            }
-        } else {
-            print("Invalid URL for Focus settings")
-        }
-    }
     
-    func checkNotificationSettings(completion: @escaping (Bool) -> Void) {
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { settings in
-            DispatchQueue.main.async {
-                // Check if notifications are allowed
-                let notificationsEnabled = settings.alertSetting == .enabled
-                self.isDNDActive = !notificationsEnabled // Assume DND is active if notifications are not enabled
-                
-                print("Notifications Enabled: \(notificationsEnabled)")
-                print("Assumed DND Active: \(self.isDNDActive)")
-                
-                completion(notificationsEnabled)
-            }
+    func requestNotificationPermission(completion: @escaping (Bool) -> Void) {
+           let center = UNUserNotificationCenter.current()
+           center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+               DispatchQueue.main.async {
+                   if let error = error {
+                       print("Error requesting notification permission: \(error.localizedDescription)")
+                       completion(false)
+                   } else {
+                       print("Notification permission granted: \(granted)")
+                       completion(granted)
+                   }
+               }
+           }
+       }
+    
+    func showDNDReminder() {
+          // Trigger the alert to remind users to enable DND mode
+          showAlert = true
+      }
+    
+    func configureAudioSession() {
+        do {
+            // Set the audio session category to 'playback' which stops other audio
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+            print("Audio session configured to stop background music.")
+        } catch {
+            print("Failed to set audio session category: \(error.localizedDescription)")
         }
     }
+
 
     func nextStimulus() {
         instructionText = "Wait for the stimulus..."

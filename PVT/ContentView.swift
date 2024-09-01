@@ -29,22 +29,17 @@ struct ContentView: View {
                     if viewModel.stimulusVisible {
                         viewModel.recordReaction()
                     } else {
-                        print("Checking notification settings...")
-                        viewModel.checkNotificationSettings { isEnabled in
-                            print("Notification settings checked. Notifications Enabled: \(isEnabled)")
-                            viewModel.showAlert = true
-                            print("Button pressed, showAlert set to true")
-                        }
+                        viewModel.startTest()
                     }
-                }) {
+                }){
                     Text(viewModel.stimulusVisible ? "Record Response" : "Start Test")
                         .padding()
                         .background(viewModel.stimulusVisible ? Color.green : Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-
-
+                
+                
                 .padding()
                 
                 if viewModel.reactionTime > 0 {
@@ -72,34 +67,19 @@ struct ContentView: View {
                 
             }
             .onAppear {
-                print("ContentView appeared")
                 viewModel.stimulusVisible = false
+                viewModel.requestNotificationPermission { granted in
+                    print("Notification permission status on app start: \(granted)")
+                }
+                viewModel.configureAudioSession() // Ensure the audio session is configured when the app starts
+                viewModel.showDNDReminder() // Show the DND reminder alert
             }
-            .onDisappear {
-                print("ContentView disappeared")
-            }
+            
             .alert(isPresented: $viewModel.showAlert) {
-                print("Showing alert. DND Active: \(viewModel.isDNDActive)")
-                
-                return Alert(
-                    title: Text("Focus Mode Recommended"),
-                    message: Text("We recommend enabling a Focus Mode that blocks notifications while using this app. You can create a Focus Mode in the iOS Settings under Focus."),
-                    primaryButton: .default(Text("Open Settings")) {
-                        print("Open Settings tapped.")
-                        viewModel.openFocusSettings()
-                        viewModel.showAlert = false
-                    },
-                    secondaryButton: viewModel.isDNDActive ? .cancel(Text("Continue")) {
-                        print("Continue tapped. DND is active, starting test.")
-                        viewModel.showAlert = false
-                        viewModel.startTest()
-                    } : .default(Text("Continue").foregroundColor(.gray)) {
-                        print("Disabled Continue tapped. No action taken.")
-                        // Disabled button, does nothing
-                    }
+                Alert(
+                    title: Text("Reminder"),
+                    message: Text("Please enable Do Not Disturb Mode to mute notifications while conducting the test."),
+                    dismissButton: .default(Text("Got it!"))
                 )
             }
-
-        }
-    }
-}
+        }}}
