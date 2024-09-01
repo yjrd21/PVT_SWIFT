@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
     @StateObject private var frameRateViewModel=FrameRateViewModel()
+    @Environment(\.scenePhase) private var scenePhase // Add this to observe app state changes
     
     
     var body: some View {
@@ -74,6 +75,11 @@ struct ContentView: View {
                 viewModel.configureAudioSession() // Ensure the audio session is configured when the app starts
                 viewModel.showDNDReminder() // Show the DND reminder alert
             }
+            .onChange(of: scenePhase) { oldPhase, newPhase in
+                           if newPhase == .active {
+                               viewModel.configureAudioSession() // Re-activate audio session when app becomes active
+                           }
+                       }
             
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(
