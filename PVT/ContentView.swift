@@ -47,45 +47,9 @@ struct ContentView: View {
                     Text("Reaction Time in ms: \(viewModel.reactionTime, specifier: "%.2f") ms")
                         .padding()
                 }
-                
-                if viewModel.renderingDelay > 0 {
-                    Text("Rendering Delay Latency in ms: \(viewModel.renderingDelay, specifier: "%.2f") ms")
-                        .padding()
-                }
-                
-                if viewModel.touchEventHandlingLatency > 0 {
-                    Text("Touch Event Handling Latency in ms: \(viewModel.touchEventHandlingLatency, specifier: "%.2f") ms")
-                        .padding()
-                }
-                
-                NavigationLink(destination: FrameRateView(frameRateMonitor: frameRateViewModel)) {
-                    Text("FrameRate")
-                        .padding()
-                        .background(Color.gray)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-                
+            
             }
             .onAppear {
                 viewModel.stimulusVisible = false
-                viewModel.requestNotificationPermission { granted in
-                    print("Notification permission status on app start: \(granted)")
-                }
-                viewModel.configureAudioSession() // Ensure the audio session is configured when the app starts
-                viewModel.showDNDReminder() // Show the DND reminder alert
-            }
-            .onChange(of: scenePhase) { oldPhase, newPhase in
-                           if newPhase == .active {
-                               viewModel.configureAudioSession() // Re-activate audio session when app becomes active
-                           }
-                       }
-            
-            .alert(isPresented: $viewModel.showAlert) {
-                Alert(
-                    title: Text("Reminder"),
-                    message: Text("Please enable Do Not Disturb Mode to mute notifications while conducting the test."),
-                    dismissButton: .default(Text("Got it!"))
-                )
             }
         }}}
