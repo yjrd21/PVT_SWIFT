@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
-    @StateObject private var frameRateViewModel=FrameRateViewModel()
     @Environment(\.scenePhase) private var scenePhase // Add this to observe app state changes
     
     
